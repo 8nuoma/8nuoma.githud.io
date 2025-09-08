@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -86,154 +87,24 @@
             border-radius: 5px;
             margin: 20px 0;
         }
+        .server-link {
+            color: #0066cc;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .server-link:hover {
+            text-decoration: underline;
+        }
+        .instructions {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+        }
     </style>
 </head>
 <body>
-
-    <div class="container">
-        <header>
-            <h1>CUF</h1>
-            <img src="your_logo.png" alt="柯里昂联合基金" id="logo">
-        </header>
-
-        <div id="home-page" class="page">
-            <div class="description">
-                <h2>柯里昂联合基金会 (Corleone United Foundation)</h2>
-                <p>柯里昂联合基金会是一个在《我的世界》光梦服务器上建立的公益组织。我们致力于：</p>
-                <ul>
-                    <li>资助初来乍到的萌新玩家，帮助他们顺利起步。</li>
-                    <li>援助暂时陷入困境、物资匮乏的老玩家。</li>
-                    <li>每日/每周随机抽取一位幸运玩家，免费赠送丰厚的材料礼包！</li>
-                </ul>
-                <p>服务器的繁荣需要大家的共同努力，您的每一次捐助都是这份善意的延伸。</p>
-            </div>
-
-            <div class="donate-form">
-                <h3>奉献您的爱心</h3>
-                <form id="donationForm">
-                    <div class="form-group">
-                        <label for="amount">捐赠金币金额：</label>
-                        <input type="number" id="amount" name="amount" min="1" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="username">我的世界游戏ID：</label>
-                        <input type="text" id="username" name="username" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="qq">您的QQ号：</label>
-                        <input type="text" id="qq" name="qq" required>
-                    </div>
-                    <button type="button" onclick="showConfirmPage()">捐金币</button>
-                </form>
-            </div>
-
-            <div id="donation-list">
-                <h3>爱心捐赠榜</h3>
-                <p>感谢以下玩家的慷慨捐助：</p>
-                <div id="donations-container"></div>
-            </div>
-        </div>
-
-        <div id="confirm-page" class="page">
-            <h1>请确认您的捐款</h1>
-            
-            <div class="info-box">
-                <h2>收款方信息</h2>
-                <p><strong>我的世界ID:</strong> 80z3 / Nnomasguijia</p>
-                <p><strong>QQ:</strong> 202543114</p>
-                <p>请确保您已将金币交易给上述玩家，或通过其他方式完成捐赠。</p>
-            </div>
-
-            <div class="info-box">
-                <h2>您的捐赠信息</h2>
-                <p><strong>金额:</strong> <span id="confirmAmount"></span> 金币</p>
-                <p><strong>您的ID:</strong> <span id="confirmName"></span></p>
-                <p><strong>您的QQ:</strong> <span id="confirmQQ"></span></p>
-            </div>
-
-            <p>您是否已经完成了捐款？</p>
-            <button onclick="submitDonation(true)">是，我已捐款</button>
-            <button class="cancel" onclick="showPage('home-page')">不，取消</button>
-        </div>
-
-        <div id="thankyou-page" class="page">
-            <h1>感谢您的慷慨捐助！</h1>
-            <p>您的善意之举将为《我的世界》光梦服务器带来更多的温暖和快乐。</p>
-            <p>柯里昂联合基金会感谢您的支持！</p>
-            <button onclick="showPage('home-page')">返回首页</button>
-        </div>
-    </div>
-
-    <script>
-        let donations = JSON.parse(localStorage.getItem('cufDonations')) || [];
-
-        document.addEventListener('DOMContentLoaded', function() {
-            displayDonations();
-        });
-
-        function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(page => {
-                page.style.display = 'none';
-            });
-            document.getElementById(pageId).style.display = 'block';
-        }
-
-        function showConfirmPage() {
-            const amount = document.getElementById('amount').value;
-            const username = document.getElementById('username').value;
-            const qq = document.getElementById('qq').value;
-
-            if (!amount || !username || !qq) {
-                alert('请填写所有必填字段！');
-                return;
-            }
-
-            document.getElementById('confirmAmount').textContent = amount;
-            document.getElementById('confirmName').textContent = username;
-            document.getElementById('confirmQQ').textContent = qq;
-
-            showPage('confirm-page');
-        }
-
-        function submitDonation(confirmed) {
-            if (confirmed) {
-                const amount = document.getElementById('confirmAmount').textContent;
-                const username = document.getElementById('confirmName').textContent;
-                const qq = document.getElementById('confirmQQ').textContent;
-
-                donations.push({
-                    amount: amount,
-                    username: username,
-                    qq: qq,
-                    date: new Date().toLocaleString()
-                });
-
-                localStorage.setItem('cufDonations', JSON.stringify(donations));
-
-                document.getElementById('donationForm').reset();
-
-                displayDonations();
-
-                showPage('thankyou-page');
-            }
-        }
-
-        function displayDonations() {
-            const container = document.getElementById('donations-container');
-            
-            if (donations.length === 0) {
-                container.innerHTML = '<p>暂无捐赠记录，成为第一个奉献爱心的人吧！</p>';
-            } else {
-                container.innerHTML = '';
-                donations.forEach(donation => {
-                    const donationElement = document.createElement('div');
-                    donationElement.classList.add('donation-item');
-                    donationElement.innerHTML = `<strong>${donation.username}</strong> (QQ: ${donation.qq}) 捐赠了 <strong style="color: #d9534f;">${donation.amount}</strong> 金币。<br><small>时间: ${donation.date}</small>`;
-                    container.appendChild(donationElement);
-                });
-            }
-        }
-    </script>
 
 </body>
 </html>
